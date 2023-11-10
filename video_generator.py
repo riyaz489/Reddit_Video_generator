@@ -1,4 +1,6 @@
+from moviepy.audio.io.AudioFileClip import AudioFileClip
 from moviepy.editor import VideoFileClip, TextClip
+from moviepy.video.compositing.CompositeVideoClip import CompositeVideoClip, clips_array
 
 
 def create_video(image_file, voice_text, output_video):
@@ -16,6 +18,24 @@ def create_video(image_file, voice_text, output_video):
 
     # Write the video file
     final_clip.write_videofile(output_video, codec='libx264', audio_codec='aac', temp_audiofile='temp_audio.m4a', remove_temp=True)
+
+
+def merge_video_clips(video_clip1_path, video_clip2_path, output_path):
+    # Load video clips
+    clip1 = VideoFileClip(video_clip1_path)
+    clip2 = VideoFileClip(video_clip2_path)
+
+    # Ensure both clips have the same duration
+    duration = min(clip1.duration, clip2.duration)
+    clip1 = clip1.subclip(0, duration)
+    clip2 = clip2.subclip(0, duration)
+
+    # Combine the video clips side by side
+    final_clip = clips_array([[clip1, clip2]])
+
+    # Write the merged video to a file
+    final_clip.write_videofile(output_path, codec='libx264', audio_codec='aac', temp_audiofile='temp_audio.m4a', remove_temp=True)
+
 
 if __name__ == "__main__":
     image_file = 'input_image.jpg'
