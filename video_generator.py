@@ -1,5 +1,5 @@
 from moviepy.audio.io.AudioFileClip import AudioFileClip
-from moviepy.editor import VideoFileClip, TextClip
+from moviepy.editor import VideoFileClip, TextClip, ImageClip
 from moviepy.video.compositing.CompositeVideoClip import CompositeVideoClip, clips_array
 
 
@@ -7,7 +7,7 @@ def create_video(image_file, voice_text, output_video):
     # Text-to-speech
 
     # Create a video clip from an image
-    image_clip = VideoFileClip(image_file, audio=False)
+    image_clip = ImageClip(image_file)
 
     # Create a text clip with the voice narration
     audio_clip = AudioFileClip('temp_audio.mp3')
@@ -38,7 +38,7 @@ def merge_video_clips(video_clip1_path, video_clip2_path, output_path):
 
 
 if __name__ == "__main__":
-    image_file = 'input_image.jpg'
+    image_file = r'image_output/out.png'
     voice_text = "Hello, this is a voice narration example for a video with an image."
     output_video = 'output_video.mp4'
 
