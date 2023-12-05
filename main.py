@@ -6,6 +6,7 @@ from sqllite_facade import Post, add_post
 from text_to_voice import text_to_speech
 from utils import empty_folder
 from video_generator import export_video,create_video,resize_bg_video,merge_video_clips,append_video_clips
+from traceback import print_exc
 import os
 
 
@@ -24,6 +25,7 @@ for post in posts:
         add_post(Post(id=post.id, name=post.title, author=post.author.name))
         if len(post.media_embed.keys()) > 0:
             # if media is there then we will use that post.
+            print('found media. skipping ...')
             continue
 
         comments = fetch_comments(post, limit=LIMIT_COMMENT)
@@ -32,35 +34,35 @@ for post in posts:
         image_gen.generate_image(text=post.selftext,
                                  image_type=ImageTypes.Post,
                                  output_dir=POST_OUTPUT,
-                                 output_file_name=POST_NAME.format(post.id))
+                                 output_file_name=POST_NAME.format(post_id=post.id))
         # generate voice for post
-        text_to_speech(post.selftext, POST_AUDIO+POST_NAME.format(post.id)+Extensions.Audio.value)
+        text_to_speech(post.selftext, POST_AUDIO+POST_NAME.format(post_id=post.id)+Extensions.Audio.value)
         # convert comment to images
         counter = 0
         for comment in comments:
             image_gen.generate_image(text=comment.body,
                                      image_type=ImageTypes.Comment,
                                      output_dir=POST_OUTPUT,
-                                     output_file_name=COMMENT_NAME.format(post.id, str(counter)))
+                                     output_file_name=COMMENT_NAME.format(post_id=post.id, counter=str(counter)))
             # generate voice for comments
-            text_to_speech(post.selftext, POST_AUDIO+COMMENT_NAME.format(post.id, str(counter))+Extensions.Audio.value)
+            text_to_speech(post.selftext, POST_AUDIO+COMMENT_NAME.format(post_id=post.id, counter=str(counter))+Extensions.Audio.value)
 
             counter += 1
 
         # convert images to videos
         post_images = [POST_OUTPUT+filename for filename in os.listdir(POST_OUTPUT)
-                       if filename.startswith(POST_NAME.format(post.id))
+                       if filename.startswith(POST_NAME.format(post_id=post.id))
                        ]
         post_clip = create_video(image_files=post_images,
-                                 audio_path=POST_AUDIO+POST_NAME.format(post.id)+Extensions.Audio.value)
+                                 audio_path=POST_AUDIO+POST_NAME.format(post_id=post.id)+Extensions.Audio.value)
         comment_clips = []
         for comment in comments:
             comment_images = [POST_OUTPUT + filename for filename in os.listdir(POST_OUTPUT)
-                           if filename.startswith(COMMENT_NAME.format(post.id, str(counter)))
+                           if filename.startswith(COMMENT_NAME.format(post_id=post.id, counter=str(counter)))
                            ]
             comment_clips.append(create_video(
                 image_files=comment_images,
-                audio_path=POST_AUDIO + COMMENT_NAME.format(post.id, str(counter))+Extensions.Audio.value)
+                audio_path=POST_AUDIO + COMMENT_NAME.format(post_id=post.id, counter=str(counter))+Extensions.Audio.value)
             )
         # merge the videos
         merged_clip = append_video_clips(post_clip, *comment_clips)
@@ -82,3 +84,4 @@ for post in posts:
 
     except Exception as e:
         print(e)
+        print(print_exc())
