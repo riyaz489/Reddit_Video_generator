@@ -10,6 +10,12 @@ from traceback import print_exc
 import os
 
 
+print('starting cleaning up ....')
+# cleaning up temp data
+empty_folder(POST_OUTPUT)
+empty_folder(POST_AUDIO)
+print('clean up done')
+
 image_gen = ImageGenerator(post_template=POST_TEMPLATE, comment_template=COMMENT_TEMPLATE)
 
 # generate background video
