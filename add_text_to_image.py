@@ -3,30 +3,21 @@ from enum import Enum
 
 from PIL import Image, ImageDraw, ImageFont
 
-
-class ImageTypes(Enum):
-    Comment = 'Comment'
-    Post = 'Post'
-
-
-class CommentsTextLimit(Enum):
-    MaxLines = 12
-    MaxChars = 79
-
-
-class PostTextLimit(Enum):
-    MaxLines = 28
-    MaxChars = 85
+from config import PostTextLimit, ImageTypes, CommentsTextLimit, FONT_SIZE, FONT, Extensions
 
 
 class ImageGenerator:
-    def __init__(self, font_size=20, font='arial.ttf'):
-        self.post_template = 'templates/post.png'
-        self.comment_template = 'templates/comment.png'
+    def __init__(self, font_size=FONT_SIZE,
+                 font=FONT,
+                 post_template=r'templates/post.png',
+                 comment_template=r'templates/comment.png'
+                 ):
+        self.post_template = post_template
+        self.comment_template = comment_template
         self.font_size = font_size
         self.font = font
 
-    def generate_image(self, text: str, output_file_name: str, image_type: ImageTypes):
+    def generate_image(self, text: str, output_file_name: str, image_type: ImageTypes, output_dir:str):
 
         max_lines = PostTextLimit.MaxLines.value if image_type == ImageTypes.Post else CommentsTextLimit.MaxLines.value
         max_chars = PostTextLimit.MaxChars.value if image_type == ImageTypes.Post else CommentsTextLimit.MaxChars.value
@@ -55,14 +46,14 @@ class ImageGenerator:
             draw.text(text_position, single_image_text, fill=text_color, font=font)
 
             # Save the modified image
-            image.save(f'image_output/{output_file_name+str(page)}.png')
+            image.save(rf'{output_dir}/{output_file_name+str(page)}{Extensions.Image.value}')
             page += 1
 
     @staticmethod
     def convert_txt_to_representable_lines(txt, max_lines, max_chars):
         output = []
         result = ImageGenerator.divide_txt_into_lines(txt, max_chars)
-
+        result = '\n'.join(result).split('\n')
         pages = math.ceil(len(result)/max_lines)
 
         for i in range(pages):

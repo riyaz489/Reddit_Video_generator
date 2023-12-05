@@ -1,10 +1,7 @@
 # check  https://www.reddit.com/prefs/apps to fetch client id and secret
-
 import praw
-import yaml
+from config import secrets
 
-
-secrets = yaml.safe_load(open('secret.yaml', 'r'))
 # Reddit API credentials
 reddit_client_id = secrets['client_id']
 reddit_client_secret = secrets['client_secret']
@@ -19,7 +16,6 @@ reddit = praw.Reddit(
 
 
 def get_posts(subreddit_name, limit):
-
     # Fetch the top 5 latest posts from the subreddit
     subreddit = reddit.subreddit(subreddit_name)
     new_posts = subreddit.hot(limit=limit)
@@ -31,10 +27,10 @@ def get_posts(subreddit_name, limit):
     #     print(f'Author: {post.author}')
     #     print(f'Score: {post.score}')
     #     print(f'URL: {post.url}')
+    #     print(f'URL: {post.selftext}')
 
 
 def fetch_comments(post, limit):
-
     # Fetch the top 5 comments for the post
     post.comments.replace_more(limit=None)  # This loads all comments
     top_comments = post.comments.list()[:limit]

@@ -2,3 +2,4 @@ secret.yaml
 templates/bg_videos/*
 output/*
 posts.db
+*__pycache__/*
