@@ -1,0 +1,4 @@
+SUBREDDIT = 'python'
+LIMIT_POST = 5
+LIMIT_COMMENT = 3
+
