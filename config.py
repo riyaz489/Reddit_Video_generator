@@ -5,7 +5,7 @@ import yaml
 
 # reddit
 secrets = yaml.safe_load(open('secret.yaml', 'r'))
-SUBREDDIT = 'AskRedditAfterDark'
+SUBREDDIT = ''
 LIMIT_POST = 20
 LIMIT_COMMENT = 5
 
