@@ -26,7 +26,7 @@ bg_clip = VideoFileClip(PREPROCESSED_BACKGROUND_VIDEO)
 # fetch post and comments
 posts = get_posts(subreddit_name=SUBREDDIT, limit=LIMIT_POST)
 for post in posts:
-
+    print(f'started {post.id}')
     # save to db
     try:
 
@@ -112,12 +112,19 @@ for post in posts:
             counter += 1
         print('starting cleaning up ....')
         # cleaning up temp data
-        # empty_folder(POST_OUTPUT)
-        # empty_folder(POST_AUDIO)
-
+        empty_folder(POST_OUTPUT)
+        empty_folder(POST_AUDIO)
+        print(f'ended {post.id}')
         print('clean up done')
 
 
     except Exception as e:
         print(e)
         print(print_exc())
+
+
+## delete from DB on the basis f order of insertion
+#  delete from posts where id  == (select id from (select *, row_number() OVER (
+#   PARTITION BY 1
+#   ORDER BY 1 DESC
+# ) as row_no from posts) where row_no =13);
