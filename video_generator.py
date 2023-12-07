@@ -24,7 +24,7 @@ def merge_video_clips(clip1, clip2):
     clip2 = clip2.subclip(0, duration)
 
     # resizing second clip
-    clip2 = clip2.resize(width=clip1.w * 0.95)
+    clip2 = clip2.resize(width=clip1.w * 0.99)
 
     # aligning clip to center
     clip2.pos = lambda t: ((clip1.w - clip2.w) // 2, (clip1.h - clip2.h) // 2)
@@ -55,7 +55,8 @@ def resize_bg_video(video_clip1_path, start=180, end=None):
 
 def export_video(clip, output_path):
 
-    clip.write_videofile(output_path, codec='libx264', audio_codec='aac', temp_audiofile='temp_audio.m4a',
+    clip.write_videofile(output_path, codec='h264_nvenc', bitrate="8M",
+                         threads=5, audio_codec='aac', temp_audiofile='temp_audio.m4a',
                           remove_temp=True, fps=FPS)
 
 
