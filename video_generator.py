@@ -1,5 +1,4 @@
 import PIL
-import math
 from moviepy.audio.io.AudioFileClip import AudioFileClip
 from moviepy.editor import VideoFileClip, TextClip, ImageClip
 from moviepy.video.compositing.CompositeVideoClip import CompositeVideoClip, clips_array
@@ -9,14 +8,11 @@ from moviepy.video.io.ImageSequenceClip import ImageSequenceClip
 from config import VIDEO_RATIO, FPS
 
 
-def create_video(image_files, audio_path):
+def create_video(image_file, audio_path):
 
     audio_clip = AudioFileClip(audio_path)
-    image_clips = [ImageClip(image_file).set_duration(math.ceil(audio_clip.duration/len(image_files)))
-                   for image_file in image_files]
-
+    image_clips = [ImageClip(image_file).set_duration(audio_clip.duration)]
     final_clip = CompositeVideoClip(image_clips)
-
     final_clip.audio = audio_clip
     return final_clip
 
@@ -47,9 +43,11 @@ def append_video_clips(*args):
     return final_clip
 
 
-def resize_bg_video(video_clip1_path):
+def resize_bg_video(video_clip1_path, start=180, end=None):
     clip1 = VideoFileClip(video_clip1_path)
-    clip1 = clip1.subclip(180, clip1.duration)
+    if end is None:
+        end = clip1.duration
+    clip1 = clip1.subclip(start, end)
     clip1 = clip1.crop(x1=int(clip1.w * 0.3), y1=0, x2=int(clip1.w - (clip1.w * 0.3)), y2=clip1.h - int(clip1.h * 0.3))
     clip1 = clip1.resize(( int(clip1.h * VIDEO_RATIO), clip1.h))
     return clip1

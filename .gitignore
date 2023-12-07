@@ -3,3 +3,5 @@ templates/bg_videos/*
 output/*
 posts.db
 *__pycache__/*
+templates/bg_videos/*
+templates/preprocessed_bg_video/*

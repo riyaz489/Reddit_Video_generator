@@ -37,6 +37,7 @@ def add_post( post):
 
         session.add(post)
         session.commit()
+        session.close()
 
 
 def bulk_add_post(details: List):
@@ -44,6 +45,8 @@ def bulk_add_post(details: List):
 
         session.bulk_save_objects(details)
         session.commit()
+        session.close()
+
 
 
 
@@ -52,12 +55,16 @@ def filter_post(ids):
         all_users = session.query(Post).filter(Post.id.in_(ids)).all()
 
         t = [r for r in all_users]
+        session.close()
+
         return t
 
 def delete_post(ids):
     with Session() as session:
         session.query(Post).filter(Post.id.in_(ids)).delete()
         session.commit()
+        session.close()
+
 
 
 
