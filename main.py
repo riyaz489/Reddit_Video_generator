@@ -50,19 +50,19 @@ for post in posts:
             text_to_speech(text, POST_AUDIO+POST_NAME.format(post_id=post.id)+str(page)+Extensions.Audio.value)
             page+=1
 
-            # convert images to videos
+        # convert images to videos
 
-            post_images = [os.path.abspath(POST_OUTPUT + filename)
-                           for filename in os.listdir(POST_OUTPUT)
-                           if filename.startswith(POST_NAME.format(post_id=post.id))
-                           ]
-            for post_image in post_images:
-                audio_path = [os.path.abspath(POST_AUDIO + filename)
-                              for filename in os.listdir(POST_AUDIO)
-                              if filename.startswith('.'.join(os.path.basename(post_image).split('.')[0:-1])) and
-                              filename.endswith(Extensions.Audio.value)
-                              ][0]
-                post_clips.append(create_video(image_file=post_image, audio_path=audio_path))
+        post_images = [os.path.abspath(POST_OUTPUT + filename)
+                       for filename in os.listdir(POST_OUTPUT)
+                       if filename.startswith(POST_NAME.format(post_id=post.id))
+                       ]
+        for post_image in post_images:
+            audio_path = [os.path.abspath(POST_AUDIO + filename)
+                          for filename in os.listdir(POST_AUDIO)
+                          if filename.startswith('.'.join(os.path.basename(post_image).split('.')[0:-1])) and
+                          filename.endswith(Extensions.Audio.value)
+                          ][0]
+            post_clips.append(create_video(image_file=post_image, audio_path=audio_path))
 
         # convert comment to images
         counter = 0

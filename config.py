@@ -30,7 +30,7 @@ TITLE_FONT = r"templates\fonts\cardigan titling bd it.otf"
 TITLE_FONT_SIZE = FONT_SIZE+2
 # voice
 engine = pyttsx3.init()
-VOICE_RATE = engine.getProperty('rate')-23
+VOICE_RATE = engine.getProperty('rate')
 VOICE_VOLUME = engine.getProperty('volume')+2
 
 

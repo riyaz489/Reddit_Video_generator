@@ -71,7 +71,7 @@ class ImageGenerator:
                     break
                 elif len(temp) == max_lines:
                     new_text_data.append(next_data+'\n'.join(temp[:len(temp)-skip_lines]))
-                    next_data = '\n'.join(temp[len(temp)-skip_lines:])
+                    next_data = '\n'.join(temp[len(temp)-skip_lines:])+'\n'
                 elif len(temp) + skip_lines > max_lines:
                     new_strng = next_data + '\n'.join(temp[0:max_lines-skip_lines])
                     new_text_data.append(new_strng)
